@@ -142,8 +142,21 @@ async function run() {
       res.send(result);
     })
 
+    app.put('/wishlist-offer/:id', async (req, res) => {
+      const id = req.params.id;
+      const updatedUser = req.body;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+          
+      if ('status' in updatedUser && Object.keys(updatedUser).length === 1) {
+         // If the 'role' field is present, update the user's role
+          const updateStatus = { $set: { status: updatedUser.status } };
+          const result = await wishlistOfferCollection.updateOne(filter, updateStatus, options);
+          return res.send(result);
+      } 
+     
+  });
     
-
 
 
     // Send a ping to confirm a successful connection
