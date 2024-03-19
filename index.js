@@ -224,7 +224,30 @@ async function run() {
   });
   
 
-    
+    app.delete('/reviews/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) }
+      const result = await reviewsCollection.deleteOne(query);
+      res.send(result);
+    })
+    app.delete('/user/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) }
+      const result = await userCollection.deleteOne(query);
+      res.send(result);
+    })
+    app.delete('/wishlist/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) }
+      const result = await wishlistCollection.deleteOne(query);
+      res.send(result);
+    })
+    app.delete('/add-property/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) }
+      const result = await addPropertyCollection.deleteOne(query);
+      res.send(result);
+    })
 
 
 
