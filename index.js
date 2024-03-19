@@ -1,23 +1,14 @@
 const express = require('express')
 const app = express()
 require('dotenv').config()
-// const stripe = require('stripe')(process.env.PAYMENT_SECRET_KEY)
 const cors = require('cors')
-// const cookieParser = require('cookie-parser')
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb')
-// const jwt = require('jsonwebtoken')
-// const morgan = require('morgan')
+
 const port = process.env.PORT || 5000
 
-// middleware
-const corsOptions = {
-  origin: ['http://localhost:5173', 'http://localhost:5174'],
-  optionSuccessStatus: 200,
-}
 
-app.use(cors(corsOptions))
+app.use(cors())
 app.use(express.json())
-// app.use(cookieParser())
 // app.use(morgan('dev'))
 
 
@@ -39,7 +30,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await client.connect();
     const userCollection = client.db("realEstateDb").collection("users");
     const addPropertyCollection = client.db("realEstateDb").collection("addProperty");
     const reviewsCollection = client.db("realEstateDb").collection("reviews");
