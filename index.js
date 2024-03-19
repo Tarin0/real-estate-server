@@ -162,6 +162,68 @@ async function run() {
       res.send(result);
     })
 
+    app.get('/add-property', async (req, res) => {
+      const cursor = addPropertyCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    })
+    app.get('/add-property/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) }
+      const result = await addPropertyCollection.findOne(query);
+      res.send(result);
+    })
+    app.get('/wishlist/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) }
+      const result = await wishlistCollection.findOne(query);
+      res.send(result);
+    })
+    app.get('/property/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) }
+      const result = await addPropertyCollection.findOne(query);
+      res.send(result);
+    })
+
+    app.put('/add-property/:id', async (req, res) => {
+      try {
+          const id = req.params.id;
+          const filter = { _id: new ObjectId(id) };
+          const options = { upsert: true };
+          const updatedProperty = req.body;
+  
+          // Check if the request body contains status field
+          if ('status' in updatedProperty) {
+              const updatedStatus = updatedProperty.status;
+              const updateStatus = { $set: { status: updatedStatus } };
+              const result = await addPropertyCollection.updateOne(filter, updateStatus, options);
+              res.send(result);
+          } else {
+              // Update property details
+              const property = {
+                  $set: {
+                      title: updatedProperty.title,
+                      startPrice: updatedProperty.startPrice,
+                      endPrice: updatedProperty.endPrice,
+                      address: updatedProperty.address,
+                      city: updatedProperty.city,
+                      country: updatedProperty.country,
+                      room: updatedProperty.room,
+                      parking: updatedProperty.parking,
+                      bathroom: updatedProperty.bathroom,
+                      imageURL: updatedProperty.imageURL
+                  }
+              };
+              const result = await addPropertyCollection.updateOne(filter, property, options);
+              res.send(result);
+          }
+      } catch (error) {
+          res.status(500).send({ message: error.message });
+      }
+  });
+  
+
     
 
 
