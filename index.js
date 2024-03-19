@@ -47,7 +47,65 @@ async function run() {
     const wishlistOfferCollection = client.db("realEstateDb").collection("wishlistOffer");
 
 
-    
+    app.put('/user/:email', async (req, res) => {
+      const email = req.params.email;
+      const updatedUser = req.body;
+      const filter = { email: email };
+      const options = { upsert: true };
+      if ('role' in updatedUser && Object.keys(updatedUser).length === 1) {
+         // If the 'role' field is present, update the user's role
+          const updateRole = { $set: { role: updatedUser.role } };
+          const result = await userCollection.updateOne(filter, updateRole, options);
+          return res.send(result);
+      } 
+      
+      else if ('status' in updatedUser && Object.keys(updatedUser).length === 1) {
+      
+          // If the 'role' field is present, update the user's role
+          const updateStatus = { $set: { status: updatedUser.role } };
+          const result = await userCollection.updateOne(filter, updateStatus, options);
+          return res.send(result);
+      } 
+      
+      else {
+          // If the 'role' field is not present, update user details with timestamp
+          const isExist = await userCollection.findOne(filter);
+          if (isExist) {
+              const updateAgent = {
+                  $set: {
+                      photoURL : updatedUser.photoURL,
+                      name: updatedUser.name,
+                      role: updatedUser.role
+                  }
+              };
+              const result = await userCollection.updateOne(filter, updateAgent, options);
+              return res.send(result);
+          } else {
+              const updateUser = {
+                  $set: { ...updatedUser, timestamp: Date.now() }
+              };
+              const result = await userCollection.updateOne(filter, updateUser, options);
+              return res.send(result);
+          }
+      }
+  });
+  
+
+
+    app.get('/user/:email', async (req, res) => {
+      const email = req.params.email;
+      // const query = { _id: new ObjectId(id) }
+      const result = await userCollection.findOne({ email });
+      res.send(result);
+    })
+
+    app.get('/user', async (req, res) => {
+      const cursor = userCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    })
+
+   
 
 
 
